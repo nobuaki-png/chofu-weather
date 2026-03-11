@@ -146,7 +146,6 @@
   .foot-dot { width:4px; height:4px; border-radius:50%; background:var(--green); margin-right:5px; animation:blink 3s ease-in-out infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-  /* ── Loading skeleton ────── */
   .loading { padding:24px 0; }
   .skel { background:var(--surface); border-radius:8px; animation:shimmer 1.5s infinite; }
   @keyframes shimmer { 0%{opacity:.5} 50%{opacity:1} 100%{opacity:.5} }
@@ -164,6 +163,8 @@
   .err { text-align:center; padding:40px 20px; color:var(--text-muted); font-size:14px; }
   .err-i { font-size:32px; margin-bottom:12px; opacity:.5; }
 
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
   @media(max-width:480px) {
     .w { padding:14px 16px 12px; }
     .cur { padding-right:32px; }
@@ -178,148 +179,89 @@
 <body>
 
 <div class="w" id="widget">
-  <!-- Loading skeleton：データ到着前に表示 -->
   <div class="loading">
     <div class="skel-cur">
       <div class="skel skel-icon"></div>
       <div class="skel-info">
         <div class="skel skel-city"></div>
         <div class="skel skel-temp"></div>
-        <div class="skel-chips">
-          <div class="skel skel-chip"></div>
-          <div class="skel skel-chip"></div>
-          <div class="skel skel-chip"></div>
-        </div>
+        <div class="skel-chips"><div class="skel skel-chip"></div><div class="skel skel-chip"></div><div class="skel skel-chip"></div></div>
       </div>
     </div>
     <div class="skel skel-tabs"></div>
     <div class="skel-hours">
-      <div class="skel skel-hr"></div>
-      <div class="skel skel-hr"></div>
-      <div class="skel skel-hr"></div>
-      <div class="skel skel-hr"></div>
-      <div class="skel skel-hr"></div>
-      <div class="skel skel-hr"></div>
-      <div class="skel skel-hr"></div>
-      <div class="skel skel-hr"></div>
+      <div class="skel skel-hr"></div><div class="skel skel-hr"></div><div class="skel skel-hr"></div><div class="skel skel-hr"></div>
+      <div class="skel skel-hr"></div><div class="skel skel-hr"></div><div class="skel skel-hr"></div><div class="skel skel-hr"></div>
     </div>
   </div>
 </div>
 
 <script>
-// ╔════════════════════════════════════════╗
-// ║  ★ ここにGASのウェブアプリURLを貼る ★  ║
-// ╚════════════════════════════════════════╝
-var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbytOAbPL_6q-yqc2NFB_LJpm2l2PgLM6KmQgeAyRHtBX-3tJiOzd83pmOBea1mEI1rn/exec';
-// 例: 'https://script.google.com/macros/s/AKfycbxXXXXX.../exec'
+var CONFIG = { LAT:35.6528, LON:139.5435, CITY:'調布市', TZ:'Asia%2FTokyo' };
+
+var API_URL = 'https://api.open-meteo.com/v1/forecast'
+  +'?latitude='+CONFIG.LAT+'&longitude='+CONFIG.LON
+  +'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation'
+  +'&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,wind_speed_10m'
+  +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
+  +'&timezone='+CONFIG.TZ+'&forecast_days=8';
 
 var WMO={0:['☀️','快晴'],1:['🌤️','晴れ'],2:['⛅','曇りがち'],3:['☁️','曇り'],45:['🌫️','霧'],48:['🌫️','霧氷'],51:['🌦️','霧雨(弱)'],53:['🌦️','霧雨'],55:['🌦️','霧雨(強)'],56:['🌧️','凍る霧雨'],57:['🌧️','凍る霧雨(強)'],61:['🌧️','小雨'],63:['🌧️','雨'],65:['🌧️','大雨'],66:['🧊','凍る雨'],67:['🧊','凍る雨(強)'],71:['🌨️','小雪'],73:['🌨️','雪'],75:['❄️','大雪'],77:['❄️','霧雪'],80:['🌦️','にわか雨(弱)'],81:['🌧️','にわか雨'],82:['⛈️','にわか雨(激)'],85:['🌨️','にわか雪(弱)'],86:['❄️','にわか雪(強)'],95:['⛈️','雷雨'],96:['⛈️','雷雨+雹(弱)'],99:['⛈️','雷雨+雹(強)']};
-function getWeather(code){return WMO[code]||['❓','不明'];}
-function glowColor(code){
-  if(code<=1)return'rgba(251,191,36,0.18)';if(code<=3)return'rgba(148,163,184,0.12)';
-  if((code>=61&&code<=67)||(code>=80&&code<=82)||(code>=51&&code<=57))return'rgba(96,165,250,0.15)';
-  if((code>=71&&code<=77)||(code>=85&&code<=86))return'rgba(200,220,255,0.15)';
-  if(code>=95)return'rgba(167,139,250,0.15)';return'rgba(148,163,184,0.10)';
+function getW(c){return WMO[c]||['❓','不明'];}
+function glowC(c){
+  if(c<=1)return'rgba(251,191,36,0.18)';if(c<=3)return'rgba(148,163,184,0.12)';
+  if((c>=61&&c<=67)||(c>=80&&c<=82)||(c>=51&&c<=57))return'rgba(96,165,250,0.15)';
+  if((c>=71&&c<=77)||(c>=85&&c<=86))return'rgba(200,220,255,0.15)';
+  if(c>=95)return'rgba(167,139,250,0.15)';return'rgba(148,163,184,0.10)';
 }
-var WEEKDAYS=['日','月','火','水','木','金','土'];
+var WKDAYS=['日','月','火','水','木','金','土'];
 
-// ── Theme ──
 var manualTheme=null;
-function getEffectiveTheme(){
-  if(manualTheme)return manualTheme;
-  return window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+function getET(){if(manualTheme)return manualTheme;return window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';}
+function applyT(){
+  var r=document.documentElement;
+  if(manualTheme)r.setAttribute('data-theme',manualTheme);else r.removeAttribute('data-theme');
+  var b=document.getElementById('theme-btn');
+  if(b){var e=getET();b.textContent=e==='dark'?'☀️':'🌙';b.title=e==='dark'?'ライトモードに切替':'ダークモードに切替';}
 }
-function applyTheme(){
-  var root=document.documentElement;
-  if(manualTheme){root.setAttribute('data-theme',manualTheme);}
-  else{root.removeAttribute('data-theme');}
-  var btn=document.getElementById('theme-btn');
-  if(btn){var e=getEffectiveTheme();btn.textContent=e==='dark'?'☀️':'🌙';btn.title=e==='dark'?'ライトモードに切替':'ダークモードに切替';}
-}
-function toggleTheme(){var c=getEffectiveTheme();manualTheme=(c==='dark')?'light':'dark';applyTheme();}
-window.matchMedia('(prefers-color-scheme: light)').addEventListener('change',function(){if(!manualTheme)applyTheme();});
+function togT(){manualTheme=(getET()==='dark')?'light':'dark';applyT();}
+window.matchMedia('(prefers-color-scheme:light)').addEventListener('change',function(){if(!manualTheme)applyT();});
 
-// ── Render ──
+function transform(raw){
+  var now=new Date();
+  var p=function(n){return n<10?'0'+n:''+n;};
+  var jstHour=now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate())+'T'+p(now.getHours())+':00';
+  var cur={temp:Math.round(raw.current.temperature_2m),feelsLike:Math.round(raw.current.apparent_temperature),humidity:raw.current.relative_humidity_2m,windSpeed:raw.current.wind_speed_10m,weatherCode:raw.current.weather_code,precipitation:raw.current.precipitation};
+  var si=raw.hourly.time.indexOf(jstHour);if(si===-1)si=0;
+  var hourly=[];for(var i=si;i<Math.min(si+24,raw.hourly.time.length);i++){hourly.push({time:raw.hourly.time[i],temp:Math.round(raw.hourly.temperature_2m[i]),weatherCode:raw.hourly.weather_code[i],precipProb:raw.hourly.precipitation_probability[i],precipitation:raw.hourly.precipitation[i],windSpeed:raw.hourly.wind_speed_10m[i]});}
+  var daily=[];for(var j=0;j<Math.min(7,raw.daily.time.length);j++){daily.push({date:raw.daily.time[j],tempMax:Math.round(raw.daily.temperature_2m_max[j]),tempMin:Math.round(raw.daily.temperature_2m_min[j]),weatherCode:raw.daily.weather_code[j],precipProbMax:raw.daily.precipitation_probability_max[j]});}
+  return{success:true,city:CONFIG.CITY,current:cur,hourly:hourly,daily:daily,updatedAt:p(now.getHours())+':'+p(now.getMinutes())};
+}
+
 function render(data){
   var el=document.getElementById('widget');
-  if(!data.success){
-    el.innerHTML='<div class="err"><div class="err-i">⚠️</div>データ取得失敗<br><small>'+(data.error||'')+'</small></div>';
-    return;
-  }
-  var c=data.current,w=getWeather(c.weatherCode),h='';
-
-  h+='<div class="theme-toggle" id="theme-btn" onclick="toggleTheme()"></div>';
-
-  h+='<div class="cur"><div class="cur-icon-wrap">';
-  h+='<div class="cur-icon-glow" style="background:'+glowColor(c.weatherCode)+'"></div>';
-  h+='<div class="cur-icon">'+w[0]+'</div></div>';
-  h+='<div class="cur-info"><div class="cur-city">'+data.city+' Weather</div>';
-  h+='<div class="cur-row"><div class="cur-temp">'+c.temp+'°</div>';
-  h+='<div class="cur-desc">'+w[1]+'</div></div>';
-  h+='<div class="chips">';
-  h+='<span class="chip"><span class="chip-i">🌡</span>体感 '+c.feelsLike+'°</span>';
-  h+='<span class="chip"><span class="chip-i">💧</span>'+c.humidity+'%</span>';
-  h+='<span class="chip"><span class="chip-i">💨</span>'+c.windSpeed+'m/s</span>';
+  if(!data.success){el.innerHTML='<div class="err"><div class="err-i">⚠️</div>データ取得失敗<br><small>'+(data.error||'')+'</small></div>';return;}
+  var c=data.current,w=getW(c.weatherCode),h='';
+  h+='<div class="theme-toggle" id="theme-btn" onclick="togT()"></div>';
+  h+='<div class="cur"><div class="cur-icon-wrap"><div class="cur-icon-glow" style="background:'+glowC(c.weatherCode)+'"></div><div class="cur-icon">'+w[0]+'</div></div>';
+  h+='<div class="cur-info"><div class="cur-city">'+data.city+' Weather</div><div class="cur-row"><div class="cur-temp">'+c.temp+'°</div><div class="cur-desc">'+w[1]+'</div></div>';
+  h+='<div class="chips"><span class="chip"><span class="chip-i">🌡</span>体感 '+c.feelsLike+'°</span><span class="chip"><span class="chip-i">💧</span>'+c.humidity+'%</span><span class="chip"><span class="chip-i">💨</span>'+c.windSpeed+'m/s</span>';
   if(c.precipitation>0)h+='<span class="chip"><span class="chip-i">🌧</span>'+c.precipitation+'mm</span>';
   h+='</div></div></div>';
-
   h+='<div class="tabs"><div class="tab tab-active" data-tab="hourly">1時間予報</div><div class="tab" data-tab="daily">週間予報</div></div>';
-
   h+='<div class="panel panel-active" id="panel-hourly"><div class="hourly-wrap"><div class="hourly">';
-  data.hourly.forEach(function(hr,i){
-    var t=hr.time.split('T')[1].substring(0,5),hw=getWeather(hr.weatherCode),isNow=(i===0);
-    h+='<div class="hr'+(isNow?' hr-now':'')+'">';
-    h+='<div class="hr-time">'+(isNow?'今':t)+'</div>';
-    h+='<div class="hr-icon">'+hw[0]+'</div>';
-    h+='<div class="hr-temp">'+hr.temp+'°</div>';
-    h+='<div class="hr-rain'+(hr.precipProb>0?'':' hr-rain-0')+'">💧'+hr.precipProb+'%</div>';
-    h+='</div>';
-  });
+  data.hourly.forEach(function(hr,i){var t=hr.time.split('T')[1].substring(0,5),hw=getW(hr.weatherCode),isNow=(i===0);h+='<div class="hr'+(isNow?' hr-now':'')+'"><div class="hr-time">'+(isNow?'今':t)+'</div><div class="hr-icon">'+hw[0]+'</div><div class="hr-temp">'+hr.temp+'°</div><div class="hr-rain'+(hr.precipProb>0?'':' hr-rain-0')+'">💧'+hr.precipProb+'%</div></div>';});
   h+='</div></div></div>';
-
-  var allMin=999,allMax=-999;
-  data.daily.forEach(function(d){if(d.tempMin<allMin)allMin=d.tempMin;if(d.tempMax>allMax)allMax=d.tempMax;});
-  var range=allMax-allMin||1;
+  var allMin=999,allMax=-999;data.daily.forEach(function(d){if(d.tempMin<allMin)allMin=d.tempMin;if(d.tempMax>allMax)allMax=d.tempMax;});var range=allMax-allMin||1;
   h+='<div class="panel" id="panel-daily"><div class="daily">';
-  data.daily.forEach(function(d,i){
-    var dt=new Date(d.date+'T00:00:00+09:00'),dayLabel=(i===0)?'今日':WEEKDAYS[dt.getDay()];
-    var dw=getWeather(d.weatherCode),barLeft=((d.tempMin-allMin)/range)*100;
-    var barWidth=Math.max(((d.tempMax-d.tempMin)/range)*100,6);
-    h+='<div class="dy'+(i===0?' dy-today':'')+'">';
-    h+='<div class="dy-day">'+dayLabel+'</div>';
-    h+='<div class="dy-icon">'+dw[0]+'</div>';
-    h+='<div class="dy-rain'+(d.precipProbMax>0?'':' dy-rain-0')+'">💧'+d.precipProbMax+'%</div>';
-    h+='<div class="dy-lo">'+d.tempMin+'°</div>';
-    h+='<div class="dy-bar-wrap"><div class="dy-bar" style="left:'+barLeft+'%;width:'+barWidth+'%"></div></div>';
-    h+='<div class="dy-hi">'+d.tempMax+'°</div></div>';
-  });
+  data.daily.forEach(function(d,i){var dt=new Date(d.date+'T00:00:00+09:00'),dl=(i===0)?'今日':WKDAYS[dt.getDay()],dw=getW(d.weatherCode),bl=((d.tempMin-allMin)/range)*100,bw=Math.max(((d.tempMax-d.tempMin)/range)*100,6);h+='<div class="dy'+(i===0?' dy-today':'')+'"><div class="dy-day">'+dl+'</div><div class="dy-icon">'+dw[0]+'</div><div class="dy-rain'+(d.precipProbMax>0?'':' dy-rain-0')+'">💧'+d.precipProbMax+'%</div><div class="dy-lo">'+d.tempMin+'°</div><div class="dy-bar-wrap"><div class="dy-bar" style="left:'+bl+'%;width:'+bw+'%"></div></div><div class="dy-hi">'+d.tempMax+'°</div></div>';});
   h+='</div></div>';
   h+='<div class="foot"><div class="foot-dot"></div>'+data.updatedAt+' 更新 · Open-Meteo</div>';
-
-  el.innerHTML=h;
-  el.style.animation='fadeIn .4s ease-out';
-  applyTheme();
-
-  var tabs=el.querySelectorAll('.tab');
-  tabs.forEach(function(tab){
-    tab.addEventListener('click',function(){
-      tabs.forEach(function(t){t.classList.remove('tab-active');});
-      tab.classList.add('tab-active');
-      el.querySelectorAll('.panel').forEach(function(p){p.classList.remove('panel-active');});
-      document.getElementById('panel-'+tab.getAttribute('data-tab')).classList.add('panel-active');
-    });
-  });
+  el.innerHTML=h;el.style.animation='fadeIn .4s ease-out';applyT();
+  el.querySelectorAll('.tab').forEach(function(tab){tab.addEventListener('click',function(){el.querySelectorAll('.tab').forEach(function(t){t.classList.remove('tab-active');});tab.classList.add('tab-active');el.querySelectorAll('.panel').forEach(function(p){p.classList.remove('panel-active');});document.getElementById('panel-'+tab.getAttribute('data-tab')).classList.add('panel-active');});});
 }
 
-// ── Fetch from GAS API ──
-fetch(GAS_API_URL)
-  .then(function(res){ return res.json(); })
-  .then(function(data){ render(data); })
-  .catch(function(err){
-    document.getElementById('widget').innerHTML=
-      '<div class="err"><div class="err-i">⚠️</div>データ取得失敗<br><small>'+err.message+'</small></div>';
-  });
+fetch(API_URL).then(function(r){return r.json();}).then(function(raw){render(transform(raw));}).catch(function(e){document.getElementById('widget').innerHTML='<div class="err"><div class="err-i">⚠️</div>データ取得失敗<br><small>'+e.message+'</small></div>';});
 </script>
-
 </body>
 </html>
