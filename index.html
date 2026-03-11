@@ -41,23 +41,25 @@
   .theme-toggle{position:absolute;top:16px;right:20px;width:30px;height:30px;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s;z-index:10;user-select:none;line-height:1;}
   .theme-toggle:hover{background:var(--surface-hover);}
 
-  .hero{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-right:40px;}
-  .hero-icon{position:relative;flex-shrink:0;}
-  .hero-icon-glow{position:absolute;inset:-16px;border-radius:50%;filter:blur(24px);animation:glow 5s ease-in-out infinite;opacity:var(--glow-opacity);}
-  @keyframes glow{0%,100%{opacity:calc(var(--glow-opacity)*0.3);transform:scale(1)}50%{opacity:calc(var(--glow-opacity)*0.6);transform:scale(1.1)}}
-  .hero-emoji{position:relative;z-index:1;font-size:72px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.2));}
+  /* ── Hero ── */
+  .hero{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-right:40px;}
+  .hero-icon{position:relative;flex-shrink:0;width:88px;height:88px;}
+  .hero-icon-glow{position:absolute;inset:-12px;border-radius:50%;filter:blur(20px);animation:glow 5s ease-in-out infinite;opacity:var(--glow-opacity);}
+  @keyframes glow{0%,100%{opacity:calc(var(--glow-opacity)*0.3);transform:scale(1)}50%{opacity:calc(var(--glow-opacity)*0.6);transform:scale(1.08)}}
+  .hero-icon img{position:relative;z-index:1;width:88px;height:88px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.15));}
   .hero-info{flex:1;min-width:0;}
   .hero-city{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:2px;}
-  .hero-temp-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
-  .hero-temp{font-size:56px;font-weight:900;line-height:1;letter-spacing:-3px;background:linear-gradient(135deg,var(--temp-grad-start) 30%,var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  .hero-hilo{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:600;color:var(--hilo-color);letter-spacing:-0.5px;}
+  .hero-temp-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .hero-temp{font-size:54px;font-weight:900;line-height:1;letter-spacing:-2px;background:linear-gradient(135deg,var(--temp-grad-start) 30%,var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
+  .hero-hilo{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:600;color:var(--hilo-color);letter-spacing:-0.5px;white-space:nowrap;}
   .hero-hi{color:var(--amber);}.hero-lo{color:var(--blue);}
   .hero-hilo-sep{font-size:12px;opacity:.4;}
-  .hero-desc{font-size:16px;font-weight:500;color:var(--text-dim);margin-top:2px;}
+  .hero-desc{font-size:15px;font-weight:500;color:var(--text-dim);margin-top:2px;}
   .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
-  .chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-dim);font-weight:500;transition:all .2s;}
+  .chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-dim);font-weight:500;transition:all .2s;white-space:nowrap;}
   .chip-i{font-size:13px;opacity:.7;}
 
+  /* ── Tabs ── */
   .tabs{display:flex;gap:2px;margin-bottom:14px;background:var(--surface);border-radius:10px;padding:3px;transition:background .3s;}
   .tab{flex:1;text-align:center;font-size:12px;font-weight:600;letter-spacing:0.5px;padding:7px 0;border-radius:8px;cursor:pointer;color:var(--text-muted);transition:all .2s;user-select:none;}
   .tab:hover{color:var(--text-dim);}
@@ -65,34 +67,38 @@
   .panel{display:none;}.panel-active{display:block;animation:panelIn .25s ease-out;}
   @keyframes panelIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
+  /* ── Hourly ── */
   .hourly-wrap{position:relative;}
   .hourly{display:flex;gap:2px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:4px;}
   .hourly::-webkit-scrollbar{display:none;}
-  .hr{min-width:60px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 5px 12px;border-radius:12px;transition:background .2s;cursor:default;flex-shrink:0;}
+  .hr{min-width:62px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 10px;border-radius:12px;transition:background .2s;cursor:default;flex-shrink:0;}
   .hr:hover{background:var(--surface-hover);}
   .hr-now{background:var(--blue-dim);border:1px solid var(--blue-border);}
   .hr-now:hover{background:var(--blue-hover);}
   .hr-rain-alert{background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.15);}
   .hr-time{font-size:11px;font-weight:600;color:var(--text-dim);}
-  .hr-icon{font-size:28px;line-height:1.1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1));}
-  .hr-temp{font-size:15px;font-weight:700;color:var(--text);}
-  .hr-rain{font-size:10px;font-weight:600;color:var(--rain);min-height:16px;}
+  .hr-icon{width:32px;height:32px;}
+  .hr-icon img{width:32px;height:32px;}
+  .hr-temp{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;}
+  .hr-rain{font-size:10px;font-weight:600;color:var(--rain);min-height:16px;white-space:nowrap;}
   .hr-rain-0{opacity:.3;}.hr-rain-high{color:var(--rain-hi);font-weight:700;}
   .hourly-wrap::after{content:'';position:absolute;top:0;right:0;width:36px;height:100%;background:linear-gradient(90deg,transparent,var(--bg));pointer-events:none;transition:background .3s;}
 
+  /* ── Daily ── */
   .daily{display:flex;flex-direction:column;gap:2px;}
-  .dy{display:flex;align-items:center;gap:0;padding:8px;border-radius:10px;transition:background .2s;cursor:default;}
+  .dy{display:flex;align-items:center;gap:0;padding:7px 8px;border-radius:10px;transition:background .2s;cursor:default;}
   .dy:hover{background:var(--surface-hover);}
   .dy-today{background:var(--surface);}
   .dy-day{width:44px;font-size:13px;font-weight:600;color:var(--text-dim);flex-shrink:0;}
   .dy-today .dy-day{color:var(--blue);font-weight:700;}
-  .dy-icon{width:36px;text-align:center;font-size:24px;flex-shrink:0;}
-  .dy-rain{width:44px;font-size:11px;font-weight:500;color:var(--rain);text-align:center;flex-shrink:0;}
+  .dy-icon{width:36px;text-align:center;flex-shrink:0;}
+  .dy-icon img{width:28px;height:28px;vertical-align:middle;}
+  .dy-rain{width:44px;font-size:11px;font-weight:500;color:var(--rain);text-align:center;flex-shrink:0;white-space:nowrap;}
   .dy-rain-0{opacity:.3;}.dy-rain-high{color:var(--rain-hi);font-weight:700;}
-  .dy-lo{width:34px;font-size:13px;font-weight:500;color:var(--text-muted);text-align:right;flex-shrink:0;}
+  .dy-lo{width:34px;font-size:13px;font-weight:500;color:var(--text-muted);text-align:right;flex-shrink:0;white-space:nowrap;}
   .dy-bar-wrap{flex:1;height:5px;background:var(--surface);border-radius:3px;margin:0 10px;position:relative;overflow:hidden;min-width:60px;transition:background .3s;}
   .dy-bar{position:absolute;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--amber));}
-  .dy-hi{width:34px;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0;}
+  .dy-hi{width:34px;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0;white-space:nowrap;}
 
   .foot{display:flex;justify-content:flex-end;align-items:center;margin-top:14px;font-size:10px;color:var(--text-muted);letter-spacing:.5px;}
   .foot-dot{width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:6px;animation:blink 3s ease-in-out infinite;}
@@ -101,17 +107,14 @@
   .loading{padding:24px 0;}
   .skel{background:var(--surface);border-radius:8px;animation:shimmer 1.5s infinite;}
   @keyframes shimmer{0%{opacity:.4}50%{opacity:.8}100%{opacity:.4}}
-  .skel-cur{display:flex;gap:18px;margin-bottom:22px;}
-  .skel-icon{width:80px;height:80px;border-radius:50%;}
-  .skel-info{flex:1;display:flex;flex-direction:column;gap:10px;}
-  .skel-city{width:120px;height:12px;}.skel-temp{width:160px;height:44px;}
+  .skel-cur{display:flex;gap:18px;margin-bottom:22px;}.skel-icon{width:88px;height:88px;border-radius:50%;}
+  .skel-info{flex:1;display:flex;flex-direction:column;gap:10px;}.skel-city{width:120px;height:12px;}.skel-temp{width:160px;height:44px;}
   .skel-chips{display:flex;gap:6px;}.skel-chip{width:70px;height:24px;border-radius:16px;}
   .skel-tabs{height:36px;border-radius:10px;margin-bottom:14px;}
-  .skel-hours{display:flex;gap:4px;}.skel-hr{width:60px;height:100px;border-radius:12px;}
-  .err{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;}
-  .err-i{font-size:36px;margin-bottom:12px;opacity:.5;}
+  .skel-hours{display:flex;gap:4px;}.skel-hr{width:62px;height:100px;border-radius:12px;}
+  .err{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;}.err-i{font-size:36px;margin-bottom:12px;opacity:.5;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-  @media(max-width:480px){.w{padding:14px 16px 12px;}.hero{padding-right:36px;}.hero-emoji{font-size:56px;}.hero-temp{font-size:44px;}.hero-hilo{font-size:13px;}.hr{min-width:52px;}.hr-icon{font-size:24px;}.theme-toggle{top:12px;right:14px;}}
+  @media(max-width:480px){.w{padding:14px 16px 12px;}.hero{padding-right:36px;}.hero-icon,.hero-icon img{width:68px;height:68px;}.hero-temp{font-size:42px;}.hero-hilo{font-size:13px;}.hr{min-width:54px;}.hr-icon,.hr-icon img{width:28px;height:28px;}.theme-toggle{top:12px;right:14px;}}
 </style>
 </head>
 <body>
@@ -124,11 +127,56 @@
 </div>
 <script>
 var C={LAT:35.6528,LON:139.5435,CITY:'調布市',TZ:'Asia%2FTokyo'};
-var API='https://api.open-meteo.com/v1/forecast?latitude='+C.LAT+'&longitude='+C.LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone='+C.TZ+'&forecast_days=8';
-var WMO={0:['☀️','快晴'],1:['🌤️','晴れ'],2:['⛅','曇りがち'],3:['☁️','曇り'],45:['🌫️','霧'],48:['🌫️','霧氷'],51:['🌦️','霧雨(弱)'],53:['🌦️','霧雨'],55:['🌦️','霧雨(強)'],56:['🌧️','凍る霧雨'],57:['🌧️','凍る霧雨(強)'],61:['🌧️','小雨'],63:['🌧️','雨'],65:['🌧️','大雨'],66:['🧊','凍る雨'],67:['🧊','凍る雨(強)'],71:['🌨️','小雪'],73:['🌨️','雪'],75:['❄️','大雪'],77:['❄️','霧雪'],80:['🌦️','にわか雨(弱)'],81:['🌧️','にわか雨'],82:['⛈️','にわか雨(激)'],85:['🌨️','にわか雪(弱)'],86:['❄️','にわか雪(強)'],95:['⛈️','雷雨'],96:['⛈️','雷雨+雹(弱)'],99:['⛈️','雷雨+雹(強)']};
-function gW(c){return WMO[c]||['❓','不明'];}
-function gC(c){if(c<=1)return'rgba(251,191,36,0.20)';if(c<=3)return'rgba(148,163,184,0.14)';if((c>=61&&c<=67)||(c>=80&&c<=82)||(c>=51&&c<=57))return'rgba(91,184,245,0.18)';if((c>=71&&c<=77)||(c>=85&&c<=86))return'rgba(200,220,255,0.18)';if(c>=95)return'rgba(167,139,250,0.18)';return'rgba(148,163,184,0.12)';}
+var API='https://api.open-meteo.com/v1/forecast?latitude='+C.LAT+'&longitude='+C.LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation,is_day&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone='+C.TZ+'&forecast_days=8';
+
+// Meteocons CDN base URL (animated fill icons)
+var ICON='https://basmilius.github.io/weather-icons/production/fill/all/';
+
+// WMO Code → [icon_day, icon_night, description]
+var WMO={
+  0:['clear-day','clear-night','快晴'],
+  1:['partly-cloudy-day','partly-cloudy-night','晴れ'],
+  2:['partly-cloudy-day','partly-cloudy-night','曇りがち'],
+  3:['overcast','overcast','曇り'],
+  45:['fog','fog','霧'],
+  48:['fog','fog','霧氷'],
+  51:['drizzle','drizzle','霧雨(弱)'],
+  53:['drizzle','drizzle','霧雨'],
+  55:['drizzle','drizzle','霧雨(強)'],
+  56:['sleet','sleet','凍る霧雨'],
+  57:['sleet','sleet','凍る霧雨(強)'],
+  61:['rain','rain','小雨'],
+  63:['rain','rain','雨'],
+  65:['rain','rain','大雨'],
+  66:['sleet','sleet','凍る雨'],
+  67:['sleet','sleet','凍る雨(強)'],
+  71:['snow','snow','小雪'],
+  73:['snow','snow','雪'],
+  75:['snow','snow','大雪'],
+  77:['snow','snow','霧雪'],
+  80:['rain','rain','にわか雨(弱)'],
+  81:['rain','rain','にわか雨'],
+  82:['thunderstorms-rain','thunderstorms-rain','にわか雨(激)'],
+  85:['snow','snow','にわか雪(弱)'],
+  86:['snow','snow','にわか雪(強)'],
+  95:['thunderstorms','thunderstorms','雷雨'],
+  96:['thunderstorms-rain','thunderstorms-rain','雷雨+雹(弱)'],
+  99:['thunderstorms-rain','thunderstorms-rain','雷雨+雹(強)']
+};
+
+function getIcon(code,isDay){
+  var w=WMO[code]||['not-available','not-available','不明'];
+  var name=(isDay!==0)?w[0]:w[1];
+  return{src:ICON+name+'.svg',desc:w[2]};
+}
+function glowC(c){
+  if(c<=1)return'rgba(251,191,36,0.20)';if(c<=3)return'rgba(148,163,184,0.14)';
+  if((c>=61&&c<=67)||(c>=80&&c<=82)||(c>=51&&c<=57))return'rgba(91,184,245,0.18)';
+  if((c>=71&&c<=77)||(c>=85&&c<=86))return'rgba(200,220,255,0.18)';
+  if(c>=95)return'rgba(167,139,250,0.18)';return'rgba(148,163,184,0.12)';
+}
 var DY=['日','月','火','水','木','金','土'],RT=40;
+
 var mT=null;
 function gET(){if(mT)return mT;return window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';}
 function aT(){var r=document.documentElement;if(mT)r.setAttribute('data-theme',mT);else r.removeAttribute('data-theme');var b=document.getElementById('tb');if(b){var e=gET();b.textContent=e==='dark'?'☀️':'🌙';b.title=e==='dark'?'ライトモードに切替':'ダークモードに切替';}}
@@ -138,9 +186,9 @@ window.matchMedia('(prefers-color-scheme:light)').addEventListener('change',func
 function tx(raw){
   var now=new Date(),p=function(n){return n<10?'0'+n:''+n;};
   var jh=now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate())+'T'+p(now.getHours())+':00';
-  var cur={temp:Math.round(raw.current.temperature_2m),fl:Math.round(raw.current.apparent_temperature),hum:raw.current.relative_humidity_2m,ws:raw.current.wind_speed_10m,wc:raw.current.weather_code,prcp:raw.current.precipitation};
+  var cur={temp:Math.round(raw.current.temperature_2m),fl:Math.round(raw.current.apparent_temperature),hum:raw.current.relative_humidity_2m,ws:raw.current.wind_speed_10m,wc:raw.current.weather_code,prcp:raw.current.precipitation,day:raw.current.is_day};
   var si=raw.hourly.time.indexOf(jh);if(si===-1)si=0;
-  var hr=[];for(var i=si;i<Math.min(si+24,raw.hourly.time.length);i++){hr.push({t:raw.hourly.time[i],tp:Math.round(raw.hourly.temperature_2m[i]),wc:raw.hourly.weather_code[i],pp:raw.hourly.precipitation_probability[i],pr:raw.hourly.precipitation[i]});}
+  var hr=[];for(var i=si;i<Math.min(si+24,raw.hourly.time.length);i++){hr.push({t:raw.hourly.time[i],tp:Math.round(raw.hourly.temperature_2m[i]),wc:raw.hourly.weather_code[i],pp:raw.hourly.precipitation_probability[i],pr:raw.hourly.precipitation[i],dy:raw.hourly.is_day[i]});}
   var dl=[];for(var j=0;j<Math.min(7,raw.daily.time.length);j++){dl.push({d:raw.daily.time[j],hi:Math.round(raw.daily.temperature_2m_max[j]),lo:Math.round(raw.daily.temperature_2m_min[j]),wc:raw.daily.weather_code[j],pp:raw.daily.precipitation_probability_max[j]});}
   return{ok:true,cur:cur,hr:hr,dl:dl,at:p(now.getHours())+':'+p(now.getMinutes())};
 }
@@ -148,15 +196,15 @@ function tx(raw){
 function render(d){
   var el=document.getElementById('widget');
   if(!d.ok){el.innerHTML='<div class="err"><div class="err-i">⚠️</div>データ取得失敗</div>';return;}
-  var c=d.cur,w=gW(c.wc),h='',tHi='--',tLo='--';
+  var c=d.cur,ic=getIcon(c.wc,c.day),h='',tHi='--',tLo='--';
   if(d.dl.length>0){tHi=d.dl[0].hi;tLo=d.dl[0].lo;}
 
   h+='<div class="theme-toggle" id="tb" onclick="tT()"></div>';
-  h+='<div class="hero"><div class="hero-icon"><div class="hero-icon-glow" style="background:'+gC(c.wc)+'"></div><div class="hero-emoji">'+w[0]+'</div></div>';
+  h+='<div class="hero"><div class="hero-icon"><div class="hero-icon-glow" style="background:'+glowC(c.wc)+'"></div><img src="'+ic.src+'" alt="'+ic.desc+'"></div>';
   h+='<div class="hero-info"><div class="hero-city">'+C.CITY+' Weather</div>';
-  h+='<div class="hero-temp-row"><div class="hero-temp">'+c.temp+'°</div>';
+  h+='<div class="hero-temp-row"><div class="hero-temp">'+c.temp+'°C</div>';
   h+='<div class="hero-hilo"><span class="hero-hi">↑'+tHi+'°</span><span class="hero-hilo-sep">/</span><span class="hero-lo">↓'+tLo+'°</span></div></div>';
-  h+='<div class="hero-desc">'+w[1]+'</div>';
+  h+='<div class="hero-desc">'+ic.desc+'</div>';
   h+='<div class="chips"><span class="chip"><span class="chip-i">🌡</span>体感 '+c.fl+'°</span><span class="chip"><span class="chip-i">💧</span>'+c.hum+'%</span><span class="chip"><span class="chip-i">💨</span>'+c.ws+'m/s</span>';
   if(c.prcp>0)h+='<span class="chip"><span class="chip-i">🌧</span>'+c.prcp+'mm</span>';
   h+='</div></div></div>';
@@ -165,9 +213,9 @@ function render(d){
 
   h+='<div class="panel panel-active" id="panel-hourly"><div class="hourly-wrap"><div class="hourly">';
   d.hr.forEach(function(r,i){
-    var t=r.t.split('T')[1].substring(0,5),hw=gW(r.wc),isN=(i===0),isRH=r.pp>=RT;
+    var t=r.t.split('T')[1].substring(0,5),ic2=getIcon(r.wc,r.dy),isN=(i===0),isRH=r.pp>=RT;
     var cls='hr';if(isN)cls+=' hr-now';else if(isRH)cls+=' hr-rain-alert';
-    h+='<div class="'+cls+'"><div class="hr-time">'+(isN?'今':t)+'</div><div class="hr-icon">'+hw[0]+'</div><div class="hr-temp">'+r.tp+'°</div>';
+    h+='<div class="'+cls+'"><div class="hr-time">'+(isN?'今':t)+'</div><div class="hr-icon"><img src="'+ic2.src+'" alt="'+ic2.desc+'"></div><div class="hr-temp">'+r.tp+'°</div>';
     var rc='hr-rain';if(r.pp===0)rc+=' hr-rain-0';else if(isRH)rc+=' hr-rain-high';
     h+='<div class="'+rc+'">💧'+r.pp+'%</div></div>';
   });
@@ -176,14 +224,14 @@ function render(d){
   var aMn=999,aMx=-999;d.dl.forEach(function(x){if(x.lo<aMn)aMn=x.lo;if(x.hi>aMx)aMx=x.hi;});var rg=aMx-aMn||1;
   h+='<div class="panel" id="panel-daily"><div class="daily">';
   d.dl.forEach(function(x,i){
-    var dt=new Date(x.d+'T00:00:00+09:00'),lb=(i===0)?'今日':DY[dt.getDay()],dw=gW(x.wc);
+    var dt=new Date(x.d+'T00:00:00+09:00'),lb=(i===0)?'今日':DY[dt.getDay()],ic3=getIcon(x.wc,1);
     var bl=((x.lo-aMn)/rg)*100,bw=Math.max(((x.hi-x.lo)/rg)*100,6),isRH=x.pp>=RT;
-    h+='<div class="dy'+(i===0?' dy-today':'')+'"><div class="dy-day">'+lb+'</div><div class="dy-icon">'+dw[0]+'</div>';
+    h+='<div class="dy'+(i===0?' dy-today':'')+'"><div class="dy-day">'+lb+'</div><div class="dy-icon"><img src="'+ic3.src+'" alt="'+ic3.desc+'"></div>';
     var dc='dy-rain';if(x.pp===0)dc+=' dy-rain-0';else if(isRH)dc+=' dy-rain-high';
     h+='<div class="'+dc+'">💧'+x.pp+'%</div><div class="dy-lo">'+x.lo+'°</div><div class="dy-bar-wrap"><div class="dy-bar" style="left:'+bl+'%;width:'+bw+'%"></div></div><div class="dy-hi">'+x.hi+'°</div></div>';
   });
   h+='</div></div>';
-  h+='<div class="foot"><div class="foot-dot"></div>'+d.at+' 更新 · Open-Meteo</div>';
+  h+='<div class="foot"><div class="foot-dot"></div>'+d.at+' 更新 · Open-Meteo · Icons by Meteocons</div>';
 
   el.innerHTML=h;el.style.animation='fadeIn .4s ease-out';aT();
   el.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){el.querySelectorAll('.tab').forEach(function(x){x.classList.remove('tab-active');});t.classList.add('tab-active');el.querySelectorAll('.panel').forEach(function(p){p.classList.remove('panel-active');});document.getElementById('panel-'+t.getAttribute('data-tab')).classList.add('panel-active');});});
