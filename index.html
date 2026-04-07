@@ -81,7 +81,8 @@
 </div>
 <script>
 var CFG={LAT:35.6528,LON:139.5435,CITY:'調布市',TZ:'Asia%2FTokyo'};
-var API='https://api.open-meteo.com/v1/forecast?latitude='+CFG.LAT+'&longitude='+CFG.LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation,is_day&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone='+CFG.TZ+'&forecast_days=8';
+var API_PRIMARY='https://api.open-meteo.com/v1/forecast?latitude='+CFG.LAT+'&longitude='+CFG.LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation,is_day&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone='+CFG.TZ+'&forecast_days=8';
+var API_FALLBACK='https://script.google.com/macros/s/AKfycbytOAbPL_6q-yqc2NFB_LJpm2l2PgLM6KmQgeAyRHtBX-3tJiOzd83pmOBea1mEI1rn/exec';
 
 // amCharts animated SVG icons (Climacons style)
 var IBASE='https://www.amcharts.com/wp-content/themes/amcharts4/css/img/icons/weather/animated/';
@@ -178,13 +179,35 @@ function render(d){
     h+='<div class="dy-lo">'+x.lo+'°</div><div class="dy-bar-wrap"><div class="dy-bar" style="left:'+bl+'%;width:'+bw+'%"></div></div><div class="dy-hi">'+x.hi+'°</div></div>';
   });
   h+='</div></div>';
-  h+='<div class="foot"><div class="foot-dot"></div>'+d.at+' 更新 · Open-Meteo</div>';
+  h+='<div class="foot"><div class="foot-dot"></div>'+d.at+' 更新 · '+(d.src||'Open-Meteo')+'</div>';
 
   el.innerHTML=h;el.style.animation='fadeIn .4s ease-out';aT();
   el.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){el.querySelectorAll('.tab').forEach(function(x){x.classList.remove('tab-active');});t.classList.add('tab-active');el.querySelectorAll('.panel').forEach(function(p){p.classList.remove('panel-active');});document.getElementById('panel-'+t.getAttribute('data-tab')).classList.add('panel-active');});});
 }
 
-fetch(API).then(function(r){return r.json();}).then(function(raw){render(tx(raw));}).catch(function(e){document.getElementById('widget').innerHTML='<div class="err"><div class="err-i">⚠️</div>取得失敗<br><small>'+e.message+'</small></div>';});
+function isDay(hour){return hour>=6&&hour<18?1:0;}
+
+function txGas(gas){
+  var now=new Date(),p=function(n){return n<10?'0'+n:''+n;};
+  var c=gas.current;
+  var cur={temp:c.temp,fl:c.feelsLike,hum:c.humidity,ws:c.windSpeed,wc:c.weatherCode,prcp:c.precipitation,dy:isDay(now.getHours())};
+  var hr=[];gas.hourly.forEach(function(h){var hh=parseInt(h.time.substring(11,13),10);hr.push({t:h.time,tp:h.temp,wc:h.weatherCode,pp:h.precipProb,pr:h.precipitation,ws:h.windSpeed,dy:isDay(hh)});});
+  var dl=[];gas.daily.forEach(function(d){dl.push({d:d.date,hi:d.tempMax,lo:d.tempMin,wc:d.weatherCode,pr:0});});
+  return{ok:true,cur:cur,hr:hr,dl:dl,at:gas.updatedAt||p(now.getHours())+':'+p(now.getMinutes()),src:gas.source||'GAS'};
+}
+
+fetch(API_PRIMARY).then(function(r){return r.json();}).then(function(raw){
+  if(raw.error){throw new Error(raw.reason||'Open-Meteo error');}
+  render(tx(raw));
+}).catch(function(e){
+  console.log('Open-Meteo failed: '+e.message+', trying GAS fallback...');
+  fetch(API_FALLBACK).then(function(r){return r.json();}).then(function(gas){
+    if(!gas.success){throw new Error(gas.error||'GAS API error');}
+    render(txGas(gas));
+  }).catch(function(e2){
+    document.getElementById('widget').innerHTML='<div class="err"><div class="err-i">⚠️</div>取得失敗<br><small>'+e2.message+'</small></div>';
+  });
+});
 </script>
 </body>
 </html>
