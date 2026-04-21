@@ -27,14 +27,17 @@
   .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
   .chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-dim);font-weight:500;white-space:nowrap;}
   .chip-i{font-size:13px;opacity:.7;}
-  .chip-wbgt{background:var(--blue-dim);border-color:var(--blue-border);color:var(--text);font-size:13px;padding:5px 13px;font-weight:700;}
-  .chip-wbgt .chip-i{font-size:15px;opacity:1;}
+  .chip-wbgt{background:var(--blue-dim);border-color:var(--blue-border);color:var(--text);font-size:13px;padding:5px 13px;font-weight:700;gap:5px;}
+  .chip-wbgt .ic-therm{width:15px;height:15px;flex-shrink:0;}
+  .wbgt-val{letter-spacing:0.3px;}
+  .wbgt-lv{font-size:11px;font-weight:700;opacity:.75;padding-left:7px;margin-left:2px;border-left:1px solid currentColor;}
   .chip-wbgt-l1{background:rgba(91,184,245,0.14);border-color:rgba(91,184,245,0.28);}
   .chip-wbgt-l2{background:rgba(74,222,128,0.14);border-color:rgba(74,222,128,0.32);color:var(--green);}
   .chip-wbgt-l3{background:rgba(245,166,35,0.16);border-color:rgba(245,166,35,0.38);color:var(--amber);}
   .chip-wbgt-l4{background:rgba(255,140,60,0.18);border-color:rgba(255,140,60,0.42);color:#ff8c3c;font-weight:800;}
   .chip-wbgt-l5{background:rgba(255,60,60,0.20);border-color:rgba(255,60,60,0.48);color:#ff5050;font-weight:900;}
-  .hr-wbgt{font-size:11px;font-weight:700;color:var(--text-dim);white-space:nowrap;margin-top:2px;}
+  .hr-wbgt{display:inline-flex;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;color:var(--text-dim);white-space:nowrap;margin-top:2px;}
+  .hr-wbgt .ic-therm{width:11px;height:11px;flex-shrink:0;}
   .hr-wbgt-l3{color:var(--amber);}.hr-wbgt-l4{color:#ff8c3c;font-weight:800;}.hr-wbgt-l5{color:#ff5050;font-weight:900;}
 
   .tabs{display:flex;gap:2px;margin-bottom:14px;background:var(--surface);border-radius:10px;padding:3px;}
@@ -63,7 +66,9 @@
   .wk-icon{line-height:0;}.wk-icon img{width:38px;height:38px;}
   .wk-hi{font-size:15px;font-weight:800;letter-spacing:-0.5px;line-height:1.1;}
   .wk-lo{font-size:11px;font-weight:600;color:var(--text-muted);line-height:1.1;}
-  .wk-wbgt{font-size:11px;font-weight:700;color:var(--text-dim);min-height:14px;line-height:1.2;white-space:nowrap;margin-top:1px;}.wk-wbgt-l3{color:var(--amber);font-weight:800;}.wk-wbgt-l4{color:#ff8c3c;font-weight:800;}.wk-wbgt-l5{color:#ff5050;font-weight:900;}
+  .wk-wbgt{display:inline-flex;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;color:var(--text-dim);min-height:14px;line-height:1.2;white-space:nowrap;margin-top:1px;}
+  .wk-wbgt .ic-therm{width:11px;height:11px;flex-shrink:0;}
+  .wk-wbgt-l3{color:var(--amber);font-weight:800;}.wk-wbgt-l4{color:#ff8c3c;font-weight:800;}.wk-wbgt-l5{color:#ff5050;font-weight:900;}
   .wk-rain{font-size:9px;font-weight:600;color:var(--rain);min-height:12px;line-height:1.2;white-space:nowrap;}.wk-rain-0{opacity:0;}.wk-rain-high{color:var(--rain-hi);}
 
   .foot{display:flex;justify-content:flex-end;align-items:center;margin-top:14px;font-size:10px;color:var(--text-muted);letter-spacing:.5px;}
@@ -84,6 +89,13 @@
 </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <symbol id="ic-therm" viewBox="0 0 24 24">
+    <path d="M13 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4 4 0 1 0 5 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="10.5" y1="16" x2="10.5" y2="8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="10.5" cy="17.3" r="2.3" fill="currentColor"/>
+  </symbol>
+</svg>
 <div class="w" id="widget">
   <div class="loading">
     <div class="skel-cur"><div class="skel skel-icon"></div><div class="skel-info"><div class="skel skel-city"></div><div class="skel skel-temp"></div><div class="skel-chips"><div class="skel skel-chip"></div><div class="skel skel-chip"></div><div class="skel skel-chip"></div></div></div></div>
@@ -200,7 +212,7 @@ function render(d){
   h+='<div class="hero-desc">'+ic.desc+'</div>';
   h+='<div class="chips"><span class="chip"><span class="chip-i">🌡</span>体感 '+c.fl+'°</span><span class="chip"><span class="chip-i">💧</span>'+c.hum+'%</span><span class="chip"><span class="chip-i">💨</span>'+c.ws+'m/s</span>';
   if(c.prcp>0)h+='<span class="chip"><span class="chip-i">🌧</span>'+c.prcp+'mm</span>';
-  if(c.wbgt!=null){var wl=c.wbgtLevel||{emoji:'',label:''};var wc=wbgtClass(c.wbgt);h+='<span class="chip chip-wbgt '+wc+'" title="'+(wl.action||'')+' / 府中観測所"><span class="chip-i">🥵</span>WBGT '+c.wbgt.toFixed(1)+'° '+wl.emoji+wl.label+'</span>';}
+  if(c.wbgt!=null){var wl=c.wbgtLevel||{label:''};var wc=wbgtClass(c.wbgt);h+='<span class="chip chip-wbgt '+wc+'" title="'+(wl.action||'')+' / 府中観測所"><svg class="ic-therm" aria-hidden="true"><use href="#ic-therm"/></svg><span class="wbgt-val">WBGT '+c.wbgt.toFixed(1)+'°</span><span class="wbgt-lv">'+wl.label+'</span></span>';}
   h+='</div></div></div>';
 
   h+='<div class="tabs"><div class="tab tab-active" data-tab="hourly">1時間予報</div><div class="tab" data-tab="daily">週間予報</div></div>';
@@ -214,7 +226,7 @@ function render(d){
     else{h+='<div class="hr-rain hr-rain-0">&nbsp;</div>';}
     var wc='hr-wind';if(r.ws>=8)wc+=' hr-wind-strong';
     h+='<div class="'+wc+'">💨'+r.ws+'</div>';
-    if(r.wbgt!=null){var hwc='hr-wbgt '+wbgtClass(r.wbgt).replace('chip-wbgt-','hr-wbgt-');h+='<div class="'+hwc+'">🥵'+r.wbgt.toFixed(0)+'°</div>';}
+    if(r.wbgt!=null){var hwc='hr-wbgt '+wbgtClass(r.wbgt).replace('chip-wbgt-','hr-wbgt-');h+='<div class="'+hwc+'"><svg class="ic-therm" aria-hidden="true"><use href="#ic-therm"/></svg><span>'+r.wbgt.toFixed(0)+'°</span></div>';}
     h+='</div>';
   });
   h+='</div></div></div>';
@@ -227,7 +239,7 @@ function render(d){
     h+='<div class="wk-icon"><img src="'+ic3.src+'" alt="'+ic3.desc+'"></div>';
     h+='<div class="wk-hi" style="color:'+tempColor(x.hi)+'">'+x.hi+'°</div>';
     h+='<div class="wk-lo" style="color:'+tempColor(x.lo)+';opacity:.7">'+x.lo+'°</div>';
-    if(x.wbgtMax!=null){var wcd=wbgtClass(x.wbgtMax).replace('chip-wbgt-','wk-wbgt-');h+='<div class="wk-wbgt '+wcd+'">🥵'+Math.round(x.wbgtMax)+'°</div>';}
+    if(x.wbgtMax!=null){var wcd=wbgtClass(x.wbgtMax).replace('chip-wbgt-','wk-wbgt-');h+='<div class="wk-wbgt '+wcd+'"><svg class="ic-therm" aria-hidden="true"><use href="#ic-therm"/></svg><span>'+Math.round(x.wbgtMax)+'°</span></div>';}
     else{h+='<div class="wk-wbgt">&nbsp;</div>';}
     if(x.pr>0){var rc='wk-rain';if(x.pr>=5)rc+=' wk-rain-high';h+='<div class="'+rc+'">🌧'+x.pr+'</div>';}
     else{h+='<div class="wk-rain wk-rain-0">&nbsp;</div>';}
