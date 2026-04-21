@@ -53,15 +53,16 @@
   .hr-wind{font-size:9px;font-weight:500;color:var(--text-muted);white-space:nowrap;}.hr-wind-strong{color:var(--amber);font-weight:700;}
   .hourly-wrap::after{content:'';position:absolute;top:0;right:0;width:36px;height:100%;background:linear-gradient(90deg,transparent,var(--bg));pointer-events:none;}
 
-  .daily{display:flex;flex-direction:column;gap:2px;}
-  .dy{display:flex;align-items:center;gap:0;padding:7px 8px;border-radius:10px;transition:background .2s;cursor:default;}.dy:hover{background:var(--surface-hover);}.dy-today{background:var(--surface);}
-  .dy-day{width:44px;font-size:13px;font-weight:600;color:var(--text-dim);flex-shrink:0;}.dy-today .dy-day{color:var(--blue);font-weight:700;}
+  .daily{display:flex;flex-direction:column;gap:3px;}
+  .dy{display:flex;align-items:center;gap:0;padding:10px 8px;border-radius:12px;transition:background .2s;cursor:default;}.dy:hover{background:var(--surface-hover);}.dy-today{background:var(--surface);}
+  .dy-day{width:44px;font-size:14px;font-weight:600;color:var(--text-dim);flex-shrink:0;}.dy-today .dy-day{color:var(--blue);font-weight:800;}
   .dy-icon{width:48px;text-align:center;flex-shrink:0;}.dy-icon img{width:44px;height:44px;vertical-align:middle;}
-  .dy-rain{width:44px;font-size:11px;font-weight:500;color:var(--rain);text-align:center;flex-shrink:0;white-space:nowrap;}.dy-rain-0{opacity:.3;}.dy-rain-high{color:var(--rain-hi);font-weight:700;}
-  .dy-lo{width:34px;font-size:13px;font-weight:500;color:var(--text-muted);text-align:right;flex-shrink:0;white-space:nowrap;}
-  .dy-bar-wrap{flex:1;height:5px;background:var(--surface);border-radius:3px;margin:0 10px;position:relative;overflow:hidden;min-width:60px;}
-  .dy-bar{position:absolute;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--amber));}
-  .dy-hi{width:34px;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0;white-space:nowrap;}
+  .dy-rain{width:40px;font-size:10px;font-weight:500;color:var(--rain);text-align:center;flex-shrink:0;white-space:nowrap;}.dy-rain-0{opacity:.25;}.dy-rain-high{color:var(--rain-hi);font-weight:700;}
+  .dy-wbgt{width:44px;font-size:10px;font-weight:600;color:var(--text-muted);text-align:center;flex-shrink:0;white-space:nowrap;}.dy-wbgt-l3{color:var(--amber);}.dy-wbgt-l4{color:#ff8c3c;font-weight:700;}.dy-wbgt-l5{color:#ff5050;font-weight:800;}
+  .dy-lo{width:34px;font-size:14px;font-weight:600;color:var(--text-muted);text-align:right;flex-shrink:0;white-space:nowrap;}
+  .dy-bar-wrap{flex:1;height:9px;background:var(--surface);border-radius:5px;margin:0 12px;position:relative;overflow:hidden;min-width:60px;}
+  .dy-bar{position:absolute;height:100%;border-radius:5px;box-shadow:0 0 6px rgba(245,166,35,0.15);}
+  .dy-hi{width:34px;font-size:15px;font-weight:800;color:var(--text);flex-shrink:0;white-space:nowrap;letter-spacing:-0.3px;}
 
   .foot{display:flex;justify-content:flex-end;align-items:center;margin-top:14px;font-size:10px;color:var(--text-muted);letter-spacing:.5px;}
   .foot-dot{width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:6px;animation:blink 3s ease-in-out infinite;}
@@ -76,7 +77,8 @@
   .skel-hours{display:flex;gap:4px;}.skel-hr{width:62px;height:100px;border-radius:12px;}
   .err{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;}.err-i{font-size:36px;margin-bottom:12px;opacity:.5;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-  @media(max-width:480px){.w{padding:14px 16px 12px;}.hero{padding-right:36px;}.hero-icon,.hero-icon img{width:120px;height:120px;}.hero-temp{font-size:42px;}.hero-hilo{font-size:13px;}.hr{min-width:54px;}.hr-icon,.hr-icon img{width:40px;height:40px;}.tt{top:12px;right:14px;}}
+  @media(max-width:480px){.w{padding:14px 16px 12px;}.hero{padding-right:36px;}.hero-icon,.hero-icon img{width:120px;height:120px;}.hero-temp{font-size:42px;}.hero-hilo{font-size:13px;}.hr{min-width:54px;}.hr-icon,.hr-icon img{width:40px;height:40px;}.tt{top:12px;right:14px;}
+    .dy{padding:9px 4px;}.dy-day{width:36px;font-size:13px;}.dy-icon{width:40px;}.dy-icon img{width:36px;height:36px;}.dy-rain,.dy-wbgt{width:34px;font-size:9px;}.dy-lo,.dy-hi{width:28px;font-size:13px;}.dy-bar-wrap{margin:0 6px;min-width:36px;height:8px;}}
 </style>
 </head>
 <body>
@@ -138,6 +140,16 @@ function wbgtClass(v){
   if(v>=21)return'chip-wbgt-l2';
   return'chip-wbgt-l1';
 }
+// 絶対温度→色（気温バー用、青→水色→緑→黄→橙→赤の6段階）
+function tempColor(t){
+  if(t<=0)return'#1e40af';
+  if(t<=8)return'#3b82f6';
+  if(t<=16)return'#5bb8f5';
+  if(t<=22)return'#4ade80';
+  if(t<=27)return'#facc15';
+  if(t<=32)return'#f97316';
+  return'#ef4444';
+}
 function wbgtLabelOf(v){
   if(v>=31)return{emoji:'🔴',label:'危険',action:'運動は原則中止'};
   if(v>=28)return{emoji:'🟠',label:'厳重警戒',action:'激しい運動は中止'};
@@ -145,13 +157,14 @@ function wbgtLabelOf(v){
   if(v>=21)return{emoji:'🟢',label:'注意',action:'積極的に水分補給'};
   return{emoji:'🔵',label:'ほぼ安全',action:'通常の注意'};
 }
-// Open-Meteo時系列にGAS側WBGTをマージ（3時間刻み→最寄り割当）
+// Open-Meteo時系列にGAS側WBGTをマージ（3時間刻み→最寄り割当 + 日別最大値）
 function mergeWbgt(tr,gas){
   if(!gas||!gas.wbgt||!gas.wbgt.available)return tr;
   if(gas.current&&gas.current.wbgt!=null){tr.cur.wbgt=gas.current.wbgt;tr.cur.wbgtLevel=gas.current.wbgtLevel||wbgtLabelOf(gas.current.wbgt);}
-  // GAS hourly は3時間刻みで wbgt を持つ。時刻(YYYY-MM-DDTHH)キーで参照表を作る
-  var map={};if(gas.hourly){gas.hourly.forEach(function(h){if(h.wbgt!=null)map[h.time.substring(0,13)]=h.wbgt;});}
+  var map={},dayMax={};
+  if(gas.hourly){gas.hourly.forEach(function(h){if(h.wbgt==null)return;var k=h.time.substring(0,13),dk=h.time.substring(0,10);map[k]=h.wbgt;if(dayMax[dk]==null||h.wbgt>dayMax[dk])dayMax[dk]=h.wbgt;});}
   tr.hr.forEach(function(r){var k=r.t.substring(0,13);if(map[k]!=null){r.wbgt=map[k];r.wbgtLevel=wbgtLabelOf(map[k]);}});
+  tr.dl.forEach(function(x){if(dayMax[x.d]!=null){x.wbgtMax=dayMax[x.d];}});
   return tr;
 }
 
@@ -209,10 +222,13 @@ function render(d){
   d.dl.forEach(function(x,i){
     var dt=new Date(x.d+'T00:00:00+09:00'),lb=(i===0)?'今日':DY[dt.getDay()],ic3=gI(x.wc,1);
     var bl=((x.lo-aMn)/rg)*100,bw=Math.max(((x.hi-x.lo)/rg)*100,6),hasRain=x.pr>0;
+    var barGrad='linear-gradient(90deg,'+tempColor(x.lo)+' 0%,'+tempColor((x.lo+x.hi)/2)+' 50%,'+tempColor(x.hi)+' 100%)';
     h+='<div class="dy'+(i===0?' dy-today':'')+'"><div class="dy-day">'+lb+'</div><div class="dy-icon"><img src="'+ic3.src+'" alt="'+ic3.desc+'"></div>';
     if(hasRain){var dc='dy-rain';if(x.pr>=5)dc+=' dy-rain-high';h+='<div class="'+dc+'">🌧'+x.pr+'mm</div>';}
     else{h+='<div class="dy-rain dy-rain-0">&nbsp;</div>';}
-    h+='<div class="dy-lo">'+x.lo+'°</div><div class="dy-bar-wrap"><div class="dy-bar" style="left:'+bl+'%;width:'+bw+'%"></div></div><div class="dy-hi">'+x.hi+'°</div></div>';
+    if(x.wbgtMax!=null){var wcd=wbgtClass(x.wbgtMax).replace('chip-wbgt-','dy-wbgt-');h+='<div class="dy-wbgt '+wcd+'">🥵'+Math.round(x.wbgtMax)+'°</div>';}
+    else{h+='<div class="dy-wbgt">&nbsp;</div>';}
+    h+='<div class="dy-lo">'+x.lo+'°</div><div class="dy-bar-wrap"><div class="dy-bar" style="left:'+bl+'%;width:'+bw+'%;background:'+barGrad+'"></div></div><div class="dy-hi">'+x.hi+'°</div></div>';
   });
   h+='</div></div>';
   h+='<div class="foot"><div class="foot-dot"></div>'+d.at+' 更新 · '+(d.src||'Open-Meteo')+'</div>';
